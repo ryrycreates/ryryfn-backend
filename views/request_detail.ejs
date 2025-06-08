@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Request: <%= request.name %></title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#fafafa; padding:20px; max-width: 700px; margin: auto; }
+    h1 { color: #222; }
+    .comment, .reply { background:#fff; margin: 10px 0; padding: 12px 15px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .reply { margin-left: 30px; font-size: 0.9em; background:#f1f1f1; }
+    .author { font-weight: bold; color: #333; }
+    .timestamp { font-size: 0.8em; color: #999; margin-left: 8px; }
+    form { margin-top: 30px; }
+    label { display: block; margin-bottom: 6px; }
+    input[type="text"], textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; }
+    button { background-color: #007bff; color: white; padding: 10px 16px; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background-color: #0056b3; }
+    .reply-button { font-size: 0.8em; color: #007bff; cursor: pointer; background: none; border: none; padding: 0; margin-left: 10px; }
+    .reply-form { margin-left: 30px; margin-top: 10px; }
+  </style>
+  <script>
+    function showReplyForm(commentId) {
+      const form = document.getElementById('reply-form-' + commentId);
+      if (form.style.display === 'block') {
+        form.style.display = 'none';
+      } else {
+        form.style.display = 'block';
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Request: <%= request.name %></h1>
+  <p><%= request.description || 'No description provided.' %></p>
+
+  <h2>Comments</h2>
+
+  <% if (comments.length === 0) { %>
+    <p>No comments yet. Be the first to comment!</p>
+  <% } %>
+
+  <% comments.forEach(comment => { %>
+    <div class="comment">
+      <span class="author"><%= comment.author %></span>
+      <span class="timestamp"><%= new Date(comment.createdAt).toLocaleString() %></span>
+      <p><%= comment.text %></p>
+
+      <button class="reply-button" onclick="showReplyForm('<%= comment.id %>')">Reply</button>
+
+      <!-- Reply form for this comment -->
+      <form id="reply-form-<%= comment.id %>" class="reply-form" method="POST" action="/request/<%= request.id %>/comment" style="display:none;">
+        <input type="hidden" name="replyToId" value="<%= comment.id %>" />
+        <label for="author-<%= comment.id %>">Your Name:</label>
+        <input type="text" id="author-<%= comment.id %>" name="author" required />
+
+        <label for="text-<%= comment.id %>">Reply:</label>
+        <textarea id="text-<%= comment.id %>" name="text" rows="3" required></textarea>
+
+        <button type="submit">Submit Reply</button>
+      </form>
+
+      <!-- Replies -->
+      <% if (repliesMap[comment.id]) { %>
+        <% repliesMap[comment.id].forEach(reply => { %>
+          <div class="reply">
+            <span class="author"><%= reply.author %></span>
+            <span class="timestamp"><%= new Date(reply.createdAt).toLocaleString() %></span>
+            <p><%= reply.text %></p>
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+  <% }) %>
+
+  <h3>Add a Comment</h3>
+  <form method="POST" action="/request/<%= request.id %>/comment">
+    <label for="author">Your Name:</label>
+    <input type="text" id="author" name="author" required />
+
+    <label for="text">Comment:</label>
+    <textarea id="text" name="text" rows="4" required></textarea>
+
+    <button type="submit">Submit Comment</button>
+  </form>
+
+  <p><a href="/requests">Back to requests list</a></p>
+</body>
+</html>

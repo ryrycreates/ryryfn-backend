@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="../main.css" />
+   <script src="../transition.js" type="text/javascript"></script>
+  <style>
+    .stat-box {
+      display: inline-block;
+      margin: 20px;
+      padding: 20px;
+      background-color: #003366;
+      color: white;
+      border-radius: 8px;
+      text-align: center;
+      width: 200px;
+    }
+
+    .status-group {
+      margin: 40px 0;
+      background-color: #e0e0e0;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .status-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      padding-left: 10px;
+    }
+
+    .asset-card {
+      display: block;
+      background-color: #ffffff;
+      border-radius: 10px;
+      margin: 10px;
+      padding: 15px;
+      text-decoration: none;
+      color: black;
+      position: relative;
+      border-left: 6px solid #ccc;
+      box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .status-label {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      background-color: gray;
+      color: white;
+    }
+
+    .status-accepted { background-color: green; }
+    .status-rejected { background-color: red; }
+    .status-pending  { background-color: orange; }
+
+    .asset-img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .asset-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="main">
+    <div class="banner" style="background-size: cover; height: 250px; background-image: url('filterImages/slurpy.png');"></div>
+    <div class="banner2" style="background-size: contain; background-repeat: no-repeat; background-position:center; width: 900px; height: 250px; background-image: url('websiteLogo.png'); position: absolute; top:8px"></div>
+
+    <ul class="menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="../request">Request</a></li>
+      <li><a href="../assets">Assets</a></li>
+      <li><a href="../upload">Upload Asset</a></li>
+      <li><a href="../dashboard" class="active"><span>Dashboard</span></a></li>
+    </ul>
+
+    <h1><%= username %>'s Dashboard</h1>
+    <div>
+  <div>
+    <img src="<%= avatar || '/defaultProfile.jpg' %>" 
+         alt="Profile Picture" 
+         style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #003366;" />
+  </div>
+  <form action="/avatar" method="POST" enctype="multipart/form-data">
+    <label for="profilePic" style="font-weight: bold; display: block; margin-bottom: 8px;">Update Profile Picture</label>
+    <input type="text" name="url" id="profilePic" placeholder="Paste google drive share link to your pfp. (this will update automatically, no admin review.)" onchange="this.form.submit()" />
+  </form>
+</div>
+
+
+    <div>
+      <div class="stat-box">
+        <h2>24h Downloads</h2>
+        <p><%= downloads24h || 0 %></p>
+      </div>
+      <div class="stat-box">
+        <h2>Total Downloads</h2>
+        <p><%= downloads || 0 %></p>
+      </div>
+       <div class="stat-box">
+        <h2>User Profile</h2>
+        <p><a href="/users/<%= username %>" style="color:white"><%= username %>'s Profile</a></p>
+      </div>
+    </div>
+
+    <% function renderAssetsByStatus(statusName, label, colorClass) { 
+      const filtered = assets.filter(a => a.status === statusName);
+      if (filtered.length === 0) return;
+    %>
+      <div class="status-group">
+        <div class="status-title"><%= label %></div>
+        <div class="asset-group">
+          <% filtered.forEach(asset => { %>
+            <a class="asset-card" href="../preview/<%= asset.id %>">
+              <div class="status-label <%= colorClass %>"><%= asset.status %></div>
+              <img class="asset-img" src="https://ryryfn.com/<%= asset.img %>" alt="<%= asset.name %>">
+              <span class="asset-name"><%= asset.name %></span><br>
+              <span class="asset-category"><strong>Category:</strong> <%= asset.category %></span><br>
+              <span class="asset-category"><strong>Downloads:</strong> <%= asset.downloads %></span>
+            </a>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+
+    <% renderAssetsByStatus("accepted", "✅ Accepted Assets", "status-accepted"); %>
+    <% renderAssetsByStatus("pending", "🕐 Pending Approval", "status-pending"); %>
+    <% renderAssetsByStatus("rejected", "❌ Rejected Submissions", "status-rejected"); %>
+  </div>
+</body>
+</html>

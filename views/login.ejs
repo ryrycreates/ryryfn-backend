@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="../main.css">
+    <script src="../transition.js" type="text/javascript"></script>
+    <link rel="icon" href="https://ryryfn.com/ryryprofile.jpg">
+     <script src="../transition.js" type="text/javascript"></script>
+</head>
+<body>
+  <div id="main">
+    <div class="banner" style="background-size: cover; background-repeat: no-repeat; width: 100%; height: 250px; background-image: url(&quot;filterImages/slurpy.png&quot;);"></div>
+    <div class="banner2" style="background-size: contain; background-repeat: no-repeat; background-position:center; width: 900px; height: 250px; background-image: url('websiteLogo.png'); position: absolute; top:8px"></div>
+    <ul class="menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="../request">Request</a></li>
+      <li><a href="../assets"><span>Assets</span></a></li>
+      <li><a href="../upload"><span>Upload Asset</span></a></li>
+      <li><a href="../dashboard"><span>Dashboard</span></a></li>
+    </ul>
+  <h2>Login or <a href="../create">Create account</a></h2>
+
+<% if (error) { %>
+  <p style="color: #ff4d4d; font-weight: bold; margin-top: 15px;"><%= error %></p>
+<% } else if (created) { %>
+  <p style="color: #00cc66; font-weight: bold; margin-top: 15px;">Account Successfully Created.</p>
+<% } %>
+
+  <form method="POST" action="/login">
+    <label>
+      Username:
+      <input type="text" name="username" required>
+    </label><br><br>
+
+    <label>
+      Password:
+      <input type="password" name="password" required>
+    </label><br><br>
+
+    <button type="submit">Login</button>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Asset</title>
+  <link rel="stylesheet" href="../main.css">
+  <link rel="icon" href="https://ryryfn.com/ryryprofile.jpg">
+   <script src="../transition.js" type="text/javascript"></script>
+  <style>
+    form {
+      margin-top: 30px;
+      background-color: #003366;
+      padding: 20px;
+      border-radius: 5px;
+      border: 1px solid #0059b3;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    form label {
+      display: block;
+      font-weight: bold;
+      margin-top: 15px;
+      color: white;
+    }
+
+    form input[type="text"] {
+      display: block;
+      padding: 8px;
+      width: 100%;
+      max-width: 400px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      border: 1px solid #007acc;
+      border-radius: 4px;
+    }
+
+    button[type="button"] {
+      margin-top: 5px;
+      margin-bottom: 15px;
+      background: #66aaff;
+      color: black;
+      font-weight: bold;
+      border: 1px solid #004080;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button[type="button"]:hover {
+      background: #ccc;
+    }
+
+    button[type="submit"] {
+      background: linear-gradient(to bottom, #66aaff, #ffffff);
+      border: 1px solid #004080;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+      color: black;
+      margin-top: 20px;
+    }
+
+    button[type="submit"]:hover {
+      background: #ccc;
+    }
+
+    fieldset {
+      border: 1px solid #0073e6;
+      padding: 15px;
+      margin-bottom: 20px;
+      background-color: #002b66;
+      border-radius: 5px;
+    }
+
+    legend {
+      font-weight: bold;
+      color: #fff;
+      padding: 0 10px;
+    }
+
+    .dynamic-inputs {
+      margin-bottom: 10px;
+    }
+
+    body {
+      background: linear-gradient(to bottom, #1a3e80, #002b66);
+      color: white;
+      font-family: "Roboto_SemiBold";
+    }
+  </style>
+</head>
+<body>
+  <div id="main" style="text-align:left">
+    <div class="banner" style="background-size: cover; background-repeat: no-repeat; width: 100%; height: 250px; background-image: url(&quot;filterImages/slurpy.png&quot;);"></div>
+    <div class="banner2" style="background-size: contain; background-repeat: no-repeat; background-position:center; width: 900px; height: 250px; background-image: url('websiteLogo.png'); position: absolute; top:8px"></div>
+    <ul class="menu">
+      <li><a href="/">Home</a></li>
+      <li><a href="../request">Request</a></li>
+      <li><a href="../assets"><span>Assets</span></a></li>
+      <li><a href="../upload" class="active"><span>Upload Asset</span></a></li>
+       <li><a href="../dashboard"><span>Dashboard</span></a></li>
+    </ul>
+    <p>Upload your asset, preview image, and gallery images to google drive. Then set these settings and copy the share links to the files. Paste them below.</p>
+    <img src="https://ryryfn.com/Screenshot 2025-06-05 174042.png" style="margin-top:20px">
+    <form action="/upload" method="POST">
+      <fieldset>
+        <legend>Asset Details</legend>
+
+        <label for="name">Name:</label>
+        <input type="text" name="name" required>
+
+        <label for="category">Description:</label>
+        <textarea name="category" required></textarea>
+
+        <label for="credits">Credits:</label>
+        <input type="text" name="credits" required>
+
+        <label for="file">Asset File (URL):</label>
+        <input type="text" name="file" placeholder="Upload Google Drive asset link (e.g. https://drive.google.com/uc?export=download&id=...)" required>
+
+        <label for="img">Preview Image (URL):</label>
+        <input type="text" name="img" placeholder="Upload Google Drive preview image link (e.g. https://drive.google.com/uc?export=view&id=...)" required>
+      </fieldset>
+
+      <fieldset>
+        <legend>Tags and Media</legend>
+
+        <label>Seasons:</label>
+        <div id="season-container" class="dynamic-inputs">
+          <input type="text" name="season" placeholder="e.g. 22" required>
+        </div>
+        <button type="button" onclick="addField('season')">+ Add Season</button>
+
+        <label>Keywords:</label>
+        <div id="keywords-container" class="dynamic-inputs">
+          <input type="text" name="keywords" placeholder="e.g. prop, wall, tree" required>
+        </div>
+        <button type="button" onclick="addField('keywords')">+ Add Keyword</button>
+
+        <label>Gallery Images:</label>
+        <div id="gallery-container" class="dynamic-inputs">
+          <input type="text" name="gallery" placeholder="Gallery image link (Google Drive or other)" required>
+        </div>
+        <button type="button" onclick="addField('gallery')">+ Add Image</button>
+      </fieldset>
+
+      <fieldset>
+        <legend>Logistics</legend>
+
+        <label>Require user to watch a series of ads prior to downloading the asset (oppurtunity for payout is not guarenteed)</label>
+          <input type="checkbox" name="premium">
+
+          <label>I understand that this asset will not be immediately uploaded and requires manual review. ryryfn.com reserves the right to reject any asset submission or ad display request.</label>
+          <input type="checkbox" required>
+      </fieldset>
+
+      <button type="submit">Upload</button>
+    </form>
+  </div>
+  <script>
+    function addField(type) {
+      const container = document.getElementById(`${type}-container`);
+      const input = document.createElement("input");
+      input.type = "text";
+      input.name = type;
+      input.required = true;
+
+      // Add placeholders for new inputs matching type
+      if (type === "file") {
+        input.placeholder = "Upload Google Drive asset link (e.g. https://drive.google.com/uc?export=download&id=...)";
+      } else if (type === "img") {
+        input.placeholder = "Upload Google Drive preview image link (e.g. https://drive.google.com/uc?export=view&id=...)";
+      } else if (type === "gallery") {
+        input.placeholder = "Gallery image link (Google Drive or other)";
+      } else if (type === "season") {
+        input.placeholder = "e.g. 22";
+      } else if (type === "keywords") {
+        input.placeholder = "e.g. prop, wall, tree";
+      }
+
+      container.appendChild(input);
+    }
+  </script>
+</body>
+</html>

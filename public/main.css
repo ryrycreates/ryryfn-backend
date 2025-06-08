@@ -1,0 +1,207 @@
+@font-face {
+  font-family: 'Roboto_SemiBold';
+  src: url('/Roboto-SemiBold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+      background: linear-gradient(to bottom, #1a3e80, #002b66);
+      color: white;
+      margin: 30;
+      padding: 0;
+      text-align: center;
+      font-family: "Roboto_SemiBold"
+    }
+
+    img {
+      display: block;
+      margin: 0 auto;
+    }
+
+    #main {
+      width: 900px;
+      margin: 0 auto;
+      text-align: left;
+      background-color: #002b66;
+      min-height: 1000px;
+      text-align: center;
+    }
+
+    .menu {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0;
+      background: linear-gradient(to bottom, #6a7df0, #002b66);
+      margin-left: 0;
+    }
+
+    .menu li {
+      margin: 0;
+    }
+
+    .menu a {
+      display: block;
+      padding: 10px 15px;
+      text-decoration: none;
+      color: black;
+      background: linear-gradient(to bottom, #66aaff, #ffffff);
+      border-top-right-radius: 3px;
+      font-weight: bold;
+      text-align: center;
+      min-width: 120px;
+      border-top-left-radius: 3px;
+    }
+
+    .menu a:hover {
+      background: #ccc;
+      color: black;
+    }
+    
+    .menu a.active {
+      background: linear-gradient(to bottom, #66aaff, #002b66);
+      color: white;
+    }
+
+    .message {
+      margin: 20px 0;
+      font-weight: bold;
+      color: #cce0ff;
+    }
+
+    .asset-grid {
+      width: 860px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      margin: 20px;
+    }
+
+    .asset-card {
+      background-color: white;
+      border: 2px solid #000000;
+      text-decoration: none;
+      color: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+
+    .asset-card:hover {
+      background: rgb(177, 177, 180);
+    }
+
+    .asset-img {
+      width: 100%;
+      height: auto;
+      max-height: 150px;
+      object-fit: contain;
+      border: 1px solid #003366;
+      background: #e6f0ff;
+      margin-bottom: 10px;
+    }
+
+    .asset-name {
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .asset-category {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .hlod-overlay {
+  top: 6px;
+  right: 6px;
+  background-color: rgba(255, 223, 0, 0.85); /* yellow with slight transparency */
+  color: #000;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: sans-serif;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.user-details {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(to bottom, #004080, #001f40);
+  padding: 15px 20px;
+  border-radius: 10px;
+  border: 1px solid #0073e6;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+  margin: 20px auto;
+  width: 500px;
+  color: white;
+}
+
+.user-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #66aaff;
+  margin-right: 20px;
+}
+
+.user-info {
+  flex-grow: 1;
+}
+
+.user-name {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+  font-family: 'Roboto_SemiBold', sans-serif;
+}
+
+.user-role {
+  font-size: 14px;
+  color: #ffcc00;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.user-email {
+  font-size: 14px;
+  color: #cce0ff;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 20px 0;
+  border: 1px solid #999;
+  color: black;
+  background-color: white;
+}
+
+th, td {
+  border: 1px solid #999;
+  padding: 10px 14px;
+  text-align: left;
+  background-color:white;
+}
+
+th {
+  background: linear-gradient(to bottom, #66aaff, #002b66);
+  font-weight: bold;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tr:hover {
+  background-color: #dbefff;
+}
+

@@ -112,25 +112,31 @@ function createUser(req, res, next) {
 }
 
 function getSortedUsers(req, res, next) {
-    reloadData();
-    var usermap = {};
-    for(var l=0; l<users.length; l++) {
-        usermap[users[l].username] = 0;
-    }
-    for(var i=0; i<assetDownloads.length; i++) {
-        
-            const username = assetDownloads[i].upload_username;
+  reloadData();
 
-  if (usermap[username]) {
-    usermap[username] += 1;
-  } else {
-    usermap[username] = 1;
+  // Initialize user map with 0 downloads for each user
+  var usermap = {};
+  for (var l = 0; l < users.length; l++) {
+    usermap[users[l].username] = 0;
   }
+
+  // Count downloads per user
+  for (var i = 0; i < assetDownloads.length; i++) {
+    const username = assetDownloads[i].upload_username;
+    if (usermap[username] !== undefined) {
+      usermap[username] += 1;
+    } else {
+      usermap[username] = 1; // In case username not in users array
     }
-    const sorted = Object.entries(usermap)
-  .sort((a, b) => b[1] - a[1]);
-    req.user_table = sorted;
-    next();
+  }
+
+  // Convert to array, filter out users with 0 downloads, then sort descending by downloads
+  const sorted = Object.entries(usermap)
+    .filter(([username, count]) => count > 0) // Remove zero downloads
+    .sort((a, b) => b[1] - a[1]);
+
+  req.user_table = sorted;
+  next();
 }
 
 function countUploads(req, res, next) {

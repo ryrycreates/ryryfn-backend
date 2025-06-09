@@ -272,11 +272,56 @@ app.get("/request", isLoggedIn, (req, res) => {
   res.render("requests", { requests: requests })
 })
 
-app.post("/request", isLoggedIn, (req, res) => {
+// GET file editor route
+app.get("/file/:pathtofile", (req, res) => {
+  if (req.session.username !== "admin") return res.status(403).render("no_permission");
+
+  const filePath = path.join(__dirname, "public", req.params.pathtofile);
+  try {
+    const raw = fs.readFileSync(filePath, "utf8");
+    const content = (() => {
+      try {
+        return JSON.stringify(JSON.parse(raw), null, 2); // pretty JSON
+      } catch {
+        return raw; // plain text
+      }
+    })();
+
+    res.render("file-editor", {
+      filepath: req.params.pathtofile,
+      content
+    });
+  } catch (err) {
+    res.status(400).send("Error reading file: " + err.message);
+  }
+});
+
+// POST save to file route
+app.post("/file/:pathtofile", (req, res) => {
+  if (req.session.username !== "admin") return res.status(403).render("no_permission");
+
+  const filePath = path.join(__dirname, "public", req.params.pathtofile);
+  let content = req.body.content;
+
+  try {
+    if (filePath.endsWith(".json")) {
+      const parsed = JSON.parse(content); // validate JSON
+      content = JSON.stringify(parsed, null, 2);
+    }
+
+    fs.writeFileSync(filePath, content, "utf8");
+    res.redirect(`/file/${req.params.pathtofile}`);
+  } catch (err) {
+    res.status(400).send("Error saving file: " + err.message);
+  }
+});
+
+app.post("/request", isLoggedIn, generateId, (req, res) => {
    var dataPath2 = path.join(__dirname, "/public/requests.json");
   var rawData2 = fs.readFileSync(dataPath2, "utf8");
   var requests = JSON.parse(rawData2);
   var request = {
+    id: req.generateId,
     name: req.body.name,
     description: req.body.description,
     imageUrl: req.body.imageUrl

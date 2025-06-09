@@ -78,7 +78,7 @@ function checkLog(req, res, next) {
     reloadData();
     req.already_downloaded = false;
     for(var i=0; i<assetDownloads.length; i++) {
-        if(assetDownloads[i].ip == req.headers['x-forwarded-for'] || req.socket.remoteAddress) {
+        if((assetDownloads[i].ip == req.headers['x-forwarded-for'] || req.socket.remoteAddress) && (req.session.username == assetDownloads[i].download_username)) {
             req.already_downloaded = true;
         }
     }
@@ -92,19 +92,6 @@ function createUser(req, res, next) {
         password: req.body.password,
         ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress
     };
-
-    current = [];
-    const dataPath5 = path.join(__dirname, "/public/activity_feed.json");
-    rawData3 = fs.readFileSync(dataPath5, "utf8");
-    current = JSON.parse(rawData3);
-
-    const act = {
-        "activity": [meta.username, "created an account", "", new Date().toISOString()]
-    }
-
-    current.push(act);
-
-    fs.writeFileSync(dataPath5, JSON.stringify(current, null, 2));
 
     users.push(meta);
     fs.writeFileSync(dataPath, JSON.stringify(users, null, 2));

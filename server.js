@@ -5,6 +5,7 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 const fetch = require('node-fetch');
+const archiver = require("archiver");
 const { findAsset, processResult, uploadAssetMetadata, createHTMLAssetList, getActivityFeed, generateId } = require("./assetUtil.js");
 const { isLoggedIn, createUser, verifyPassword, verifyUser, getUser, countUploads, createUserObject, countDownloads, findAvatar, getSortedUsers, getUserNot, checkLog, countDownloadsIndividual, countDownloads24h} = require("./userUtil.js");
 const PORT = 3000;
@@ -134,12 +135,10 @@ function getLatestSortedEntriesByUser(entries, targetUsername) {
 }
 
 function getDriveDisplayLink(inputUrl) {
-  const match = inputUrl.match(/(?:\/d\/|id=|\/uc\?id=)([a-zA-Z0-9_-]{10,})/);
-  if (!match || !match[1]) return null; // invalid link
-
-  const fileId = match[1];
-  return `https://drive.google.com/uc?id=${fileId}`;
+  var splitURL = inputUrl.split("/");
+  return `https://drive.google.com/uc?export=view&id=${splitURL[5]}`;
 }
+
 
 
 app.set("view engine", "ejs");
@@ -258,11 +257,12 @@ app.post("/avatar", (req, res) => {
   var avatars = JSON.parse(rawData2);
   var avatar = 
     {
-        "username": "h",
-        "avatar": getDriveDisplayLink(req.body.url)
+        "username": req.session.username,
+        "avatar": getDriveDisplayLink(req.body.link)
     }
     avatars.push(avatar);
     fs.writeFileSync(dataPath2, JSON.stringify(avatars, null, 2));
+    res.redirect("/dashboard");
 })
 
 app.get("/request", isLoggedIn, (req, res) => {
@@ -323,6 +323,39 @@ app.get("/download/:id", isLoggedIn, findAsset, checkLog, (req, res) => {
       fs.writeFileSync(dataPath2, JSON.stringify(downloads, null, 2));
     }
 });
+
+app.get("/download-data", (req, res) => {
+  if(req.session.username == "admin") {
+    const zipPath = path.join(__dirname, "data_bundle.zip");
+  const output = fs.createWriteStream(zipPath);
+  const archive = archiver("zip", { zlib: { level: 9 } });
+
+  output.on("close", () => {
+    res.download(zipPath, "site-data.zip", (err) => {
+      if (err) {
+        console.error("Download error:", err);
+      } else {
+        fs.unlinkSync(zipPath); // Clean up zip after download
+      }
+    });
+  });
+
+  archive.on("error", (err) => {
+    throw err;
+  });
+
+  archive.pipe(output);
+
+  // Add files
+  archive.file(path.join(__dirname, "/public/requests.json"), { name: "requests.json" });
+  archive.file(path.join(__dirname, "users.json"), { name: "users.json" });
+  archive.file(path.join(__dirname, "/public/uploads.json"), { name: "uploads.json" });
+  archive.file(path.join(__dirname, "/public/download_log.json"), { name: "download_log.json" });
+  archive.file(path.join(__dirname, "/public/avatars.json"), { name: "avatars.json" });
+
+  archive.finalize();
+  }
+})
 
 app.get("/session-debug", (req, res) => {
   res.json(req.session);

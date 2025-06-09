@@ -232,7 +232,6 @@ function verifyUser(req, res, next) {
         if(req.body.username == users[i].username) {
             found = true;
             req.passwordCompare = users[i].password;
-            console.log(req.passwordCompare);
             next();
         }
     }

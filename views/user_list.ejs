@@ -93,9 +93,9 @@
          alt="Profile Picture" 
          style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid #003366;" />
   </div>
-  <form action="/avatar" method="POST" enctype="multipart/form-data">
+  <form action="/avatar" method="POST">
     <label for="profilePic" style="font-weight: bold; display: block; margin-bottom: 8px;">Update Profile Picture</label>
-    <input type="text" name="url" id="profilePic" placeholder="Paste google drive share link to your pfp. (this will update automatically, no admin review.)" onchange="this.form.submit()" />
+    <input type="text" name="link" id="profilePic" placeholder="Paste google drive share link to your pfp. (this will update automatically, no admin review.)" onchange="this.form.submit()" />
   </form>
 </div>
 

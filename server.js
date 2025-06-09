@@ -307,7 +307,6 @@ app.get("/dashboard", isLoggedIn, countDownloads, countDownloads24h, findAvatar,
 
 app.get("/download/:id", isLoggedIn, findAsset, checkLog, (req, res) => {
   const filePath = "https://ryryfn.com/fetch.php?file=" + req.asset.file;
-    res.redirect(filePath);
     var dataPath2 = path.join(__dirname, "/public/download_log.json");
     var rawData2 = fs.readFileSync(dataPath2, "utf8");
     var downloads = JSON.parse(rawData2);
@@ -322,6 +321,7 @@ app.get("/download/:id", isLoggedIn, findAsset, checkLog, (req, res) => {
     if(!req.already_downloaded) {
       fs.writeFileSync(dataPath2, JSON.stringify(downloads, null, 2));
     }
+    res.redirect(filePath);
 });
 
 app.get("/download-data", (req, res) => {

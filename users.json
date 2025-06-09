@@ -3,10 +3,5 @@
     "username": "Test",
     "password": "Test",
     "ip": "none"
-  },
-  {
-    "username": "admin",
-    "password": "h",
-    "ip": "::1"
   }
 ]

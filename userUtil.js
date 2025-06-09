@@ -145,7 +145,19 @@ function countDownloads(req, res, next) {
     reloadData();
     var count = 0;
     for(var i=0; i<assetDownloads.length; i++) {
-        if(assetDownloads[i].upload_username == req.params.username || assetDownloads[i].upload_username == req.session.username) {
+        if(assetDownloads[i].upload_username == req.params.username) {
+            count++;
+        }
+    }
+    req.download_count = count;
+    next();
+}
+
+function countDownloadsDashboard(req, res, next) {
+    reloadData();
+    var count = 0;
+    for(var i=0; i<assetDownloads.length; i++) {
+        if(assetDownloads[i].upload_username == req.session.username) {
             count++;
         }
     }
@@ -252,5 +264,6 @@ module.exports = {
     createUser,
     checkLog,
     countDownloadsIndividual,
-    countDownloads24h
+    countDownloads24h,
+    countDownloadsDashboard
 }

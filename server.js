@@ -7,7 +7,7 @@ const fs = require("fs");
 const fetch = require('node-fetch');
 const archiver = require("archiver");
 const { findAsset, processResult, uploadAssetMetadata, createHTMLAssetList, getActivityFeed, generateId } = require("./assetUtil.js");
-const { isLoggedIn, createUser, verifyPassword, verifyUser, getUser, countUploads, createUserObject, countDownloads, findAvatar, getSortedUsers, getUserNot, checkLog, countDownloadsIndividual, countDownloads24h} = require("./userUtil.js");
+const { isLoggedIn, createUser, verifyPassword, verifyUser, getUser, countUploads, createUserObject, countDownloads, findAvatar, getSortedUsers, getUserNot, checkLog, countDownloadsIndividual, countDownloads24h, countDownloadsDashboard} = require("./userUtil.js");
 const PORT = 3000;
 const app = express();
 
@@ -343,7 +343,7 @@ app.get("/users/:username", getUser, countUploads, countDownloads, findAvatar, c
   res.render("user_page", { user: req.user });
 })
 
-app.get("/dashboard", isLoggedIn, countDownloads, countDownloads24h, findAvatar, (req, res) => {
+app.get("/dashboard", isLoggedIn, countDownloadsDashboard, countDownloads24h, findAvatar, (req, res) => {
   const allEntries = JSON.parse(fs.readFileSync(path.join(__dirname, "/public/asset_data.json"), "utf8"));
   const userEntries = getLatestSortedEntriesByUser(allEntries, req.session.username);
 

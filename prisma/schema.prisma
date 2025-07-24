@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Asset {
+  id                           Int      @id @default(autoincrement())
+  name                         String
+  tags                         Json
+  credits                      Json?
+  size                         String
+  previewImageUrl              String?
+  downloadUrl                  String
+  hasDownloadUrlOnRyRyFn       Boolean  @default(true)
+  hasExternalDownloadUrl       Boolean  @default(false)
+  fnSeasonIntroduced           Int?
+  isAnExactCopyFromGameFiles   Boolean  @default(true)
+  isRecreated                  Boolean  @default(false)
+  isRemixed                    Boolean  @default(false)
+  UEFNValidates                Boolean  @default(false)
+  isInCreativeLegacy           Boolean  @default(true)
+  childAssets                  Json?
+  parentAssets                 Json?
+  type                         String
+  createdAt                    DateTime @default(now())
+}

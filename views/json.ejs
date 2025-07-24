@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Asset JSON View</title>
+  <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font-family: Consolas, monospace;
+      padding: 2rem;
+    }
+    pre {
+      padding: 1rem;
+      border-radius: 5px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+    a {
+      color: #4ea1ff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>API Results</h1>
+
+  <pre><code class="language-json" id="json"><%= assetJson %></code></pre>
+
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-json.min.js"></script>
+<script>
+  Prism.highlightAll();
+
+  // Wait for Prism to finish before replacing URLs with anchor tags
+  window.addEventListener("DOMContentLoaded", () => {
+    const el = document.getElementById("json");
+    el.innerHTML = el.innerHTML.replace(
+      /"(https?:\/\/[^"]+)"/g,
+      (_, url) => `"<a href='${url}' target='_blank'>${url}</a>"`
+    );
+  });
+</script>
+
+</body>
+</html>

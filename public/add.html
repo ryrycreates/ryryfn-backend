@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Asset Submission</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      padding: 2rem;
+    }
+    form {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+    }
+    h1 {
+      text-align: center;
+    }
+    .form-group {
+      display: flex;
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      flex: 0 0 200px;
+      font-weight: bold;
+    }
+    .form-group input,
+    .form-group select {
+      flex: 1;
+      padding: 0.5rem;
+    }
+    .tag-list, .child-list, .parent-list {
+      margin-left: 200px;
+      margin-top: 0.5rem;
+    }
+    .tag-list span, .child-list span, .parent-list span {
+      display: inline-block;
+      background: #eee;
+      padding: 5px 10px;
+      margin: 5px 5px 0 0;
+      border-radius: 4px;
+    }
+    .inline {
+      display: flex;
+      gap: 1rem;
+    }
+    button[type="submit"] {
+      display: block;
+      margin: 1rem auto 0;
+      padding: 0.7rem 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Submit Asset</h1>
+  <form action="/submit-asset" method="POST" id="assetForm">
+    
+    <!-- Basic Fields -->
+    <div class="form-group">
+      <label>Name *</label>
+      <input type="text" name="name" required>
+    </div>
+    <div class="form-group">
+      <label>Size *</label>
+      <input type="text" name="size" required>
+    </div>
+    <div class="form-group">
+      <label>Download URL *</label>
+      <input type="url" name="downloadUrl" required>
+    </div>
+    <div class="form-group">
+      <label>Preview Image URL</label>
+      <input type="url" name="previewImageUrl">
+    </div>
+    <div class="form-group">
+      <label>Type *</label>
+      <input type="text" name="type" required>
+    </div>
+
+    <!-- Tags -->
+    <div class="form-group">
+      <label>Tags</label>
+      <div class="inline">
+        <input type="text" id="tagInput" placeholder="Add tag">
+        <button type="button" onclick="addTag()">Add Tag</button>
+      </div>
+    </div>
+    <div class="tag-list" id="tagList"></div>
+    <input type="hidden" name="tags" id="tagsField">
+
+    <!-- Child Assets -->
+    <div class="form-group">
+      <label>Child Assets</label>
+      <div class="inline">
+        <input type="text" id="childInput" placeholder="Add child asset ID">
+        <button type="button" onclick="addChild()">Add Child</button>
+      </div>
+    </div>
+    <div class="child-list" id="childList"></div>
+    <input type="hidden" name="childAssets" id="childAssetsField">
+
+    <!-- Parent Assets -->
+    <div class="form-group">
+      <label>Parent Assets</label>
+      <div class="inline">
+        <input type="text" id="parentInput" placeholder="Add parent asset ID">
+        <button type="button" onclick="addParent()">Add Parent</button>
+      </div>
+    </div>
+    <div class="parent-list" id="parentList"></div>
+    <input type="hidden" name="parentAssets" id="parentAssetsField">
+
+    <!-- Booleans -->
+    <div class="form-group">
+      <label>Has Download on RyRyFn?</label>
+      <select name="hasDownloadUrlOnRyRyFn">
+        <option>true</option>
+        <option>false</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Has External Download?</label>
+      <select name="hasExternalDownloadUrl">
+        <option>false</option>
+        <option>true</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Exact Copy From Game?</label>
+      <select name="isAnExactCopyFromGameFiles">
+        <option>true</option>
+        <option>false</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Recreated?</label>
+      <select name="isRecreated">
+        <option>false</option>
+        <option>true</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Remixed?</label>
+      <select name="isRemixed">
+        <option>false</option>
+        <option>true</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>UEFN Validates?</label>
+      <select name="UEFNValidates">
+        <option>false</option>
+        <option>true</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>In Creative Legacy?</label>
+      <select name="isInCreativeLegacy">
+        <option>true</option>
+        <option>false</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>FN Season Introduced</label>
+      <input type="number" name="fnSeasonIntroduced" min="0">
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    const tags = [];
+    const childAssets = [];
+    const parentAssets = [];
+
+    function updateHiddenFields() {
+      document.getElementById('tagsField').value = JSON.stringify(tags);
+      document.getElementById('childAssetsField').value = JSON.stringify(childAssets);
+      document.getElementById('parentAssetsField').value = JSON.stringify(parentAssets);
+    }
+
+    function addTag() {
+      const input = document.getElementById('tagInput');
+      const val = input.value.trim();
+      if (val && !tags.includes(val)) {
+        tags.push(val);
+        updateHiddenFields();
+        renderList('tagList', tags);
+      }
+      input.value = '';
+    }
+
+    function addChild() {
+      const input = document.getElementById('childInput');
+      const val = input.value.trim();
+      if (val && !childAssets.includes(val)) {
+        childAssets.push(val);
+        updateHiddenFields();
+        renderList('childList', childAssets);
+      }
+      input.value = '';
+    }
+
+    function addParent() {
+      const input = document.getElementById('parentInput');
+      const val = input.value.trim();
+      if (val && !parentAssets.includes(val)) {
+        parentAssets.push(val);
+        updateHiddenFields();
+        renderList('parentList', parentAssets);
+      }
+      input.value = '';
+    }
+
+    function renderList(targetId, items) {
+      const target = document.getElementById(targetId);
+      target.innerHTML = '';
+      items.forEach(item => {
+        const span = document.createElement('span');
+        span.textContent = item;
+        target.appendChild(span);
+      });
+    }
+
+    // Initialize hidden inputs on page load
+    updateHiddenFields();
+  </script>
+</body>
+</html>
